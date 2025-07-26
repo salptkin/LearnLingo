@@ -1,10 +1,22 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { PersistGate } from 'redux-persist/integration/react';
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
+import { GlobalStyle } from './globalStyles';
+import { Provider } from 'react-redux';
+import { persistor, store } from './redux/store';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <BrowserRouter basename="/learn-lingo">
+      <PersistGate loading={<p>Loading...</p>} persistor={persistor}>
+        <Provider store={store}>
+          <GlobalStyle />
+          <App />
+        </Provider>
+      </PersistGate>
+    </BrowserRouter>
+  </React.StrictMode>
+);

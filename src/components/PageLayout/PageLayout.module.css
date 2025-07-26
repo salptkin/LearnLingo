@@ -1,0 +1,110 @@
+.header {
+    padding: 20px 64px 15px 64px;
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 20px;
+}
+
+.wrapperLogo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.titleLogo {
+    color: var(--main-text-color);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.4px;
+}
+
+.list {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.navigate {
+    color: var(--main-text-color);
+    font-size: 16px;
+    line-height: 1.25;
+    transition: color var(--transition);
+    text-decoration: none;
+}
+
+.navigate:hover,
+.navigate:focus {
+    color: var(--active-color);
+}
+
+.navigate.active {
+    color: #8a8a89;
+}
+
+.wrapperAut {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+.buttonLogin {
+    cursor: pointer;
+    color: var(--main-text-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.25;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration-color: transparent;
+    transition: text-decoration var(--transition),
+        text-decoration-color var(--transition);
+}
+
+.buttonLogin span {
+    display: inherit;
+    transition: color var(--transition);
+}
+
+.buttonLogin:hover span,
+.buttonLogin:focus span {
+    color: var(--active-color);
+}
+
+.buttonLogin:hover,
+.buttonLogin:focus {
+    text-decoration: underline;
+    text-underline-position: under;
+    text-decoration-color: var(--active-color);
+}
+
+.buttonRegister {
+    cursor: pointer;
+    padding: 14px 39px;
+    max-width: 166px;
+    border: none;
+    border-radius: 12px;
+    background-color: #121417;
+    transition: background-color var(--transition), color var(--transition);
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.buttonRegister:hover,
+.buttonRegister:focus {
+    background-color: var(--active-color);
+    color: var(--main-text-color);
+}
