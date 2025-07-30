@@ -6,7 +6,7 @@ import styles from './PageLayout.module.css';
 import { Loader } from '../../components/Loader/Loader';
 import { useModal } from '../../helpers/useModal';
 import { ModalComponent } from '../../components/Modal/Modal';
-//import { Register } from 'components/FormAut/Register';
+import { Register } from '../Auth/RegisterForm';
 import { Login } from '../Auth/LoginForm';
 import { auth } from '../../firebaseconfig/config';
 import { signOut } from 'firebase/auth';
