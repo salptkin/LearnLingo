@@ -1,0 +1,91 @@
+.wrapperLessons {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 8px;
+}
+
+.language {
+    color: var(--color-text-content);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.listLessons {
+    display: flex;
+    align-items: center;
+    row-gap: 10px;
+    column-gap: 32px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.detailsLessons {
+    color: var(--main-text-color);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detailsLessons span {
+    display: flex;
+}
+
+.detailsLessons .rating {
+    color: #ffc531;
+}
+
+.detailsLessons .price {
+    color: #38cd3e;
+}
+
+.favoriteButton {
+    cursor: pointer;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: #000;
+    transition: color var(--transition);
+}
+
+.favoriteButton svg {
+    width: 26px;
+    height: 26px;
+}
+
+.favoriteButton:hover,
+.favoriteButton:focus {
+    color: var(--active-color);
+}
+
+.nameTeacher {
+    color: var(--main-text-color);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 32px;
+}
+
+.itemDetailsTeacher:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+.titleDetailsTeacher {
+    color: var(--main-text-color);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.titleDetailsTeacher span {
+    color: var(--color-text-content);
+}
+
+.titleDetailsTeacher .languages {
+    color: var(--main-text-color);
+    text-decoration-line: underline;
+}
