@@ -1,0 +1,46 @@
+.wrapper {
+    padding-bottom: 32px;
+    position: relative;
+}
+
+.title {
+    color: #8a8a89;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.28;
+    margin-bottom: 8px;
+}
+
+.notFound {
+    margin-bottom: 32px;
+    color: #ca0000ba;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.em {
+    font-style: normal;
+}
+
+.button {
+    cursor: pointer;
+    border: none;
+    color: #000;
+    background-color: transparent;
+    transition: color var(--transition);
+    position: absolute;
+    bottom: 20px;
+    transform: translate(0, -15px);
+}
+
+.button:hover,
+.button:focus {
+    color: var(--active-color);
+}
+
+.button svg {
+    width: 26px;
+    height: 26px;
+}

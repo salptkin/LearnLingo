@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ref, query, orderByChild, onValue } from 'firebase/database';
 import { FormControl, MenuItem, Select, styled } from '@mui/material';
-import { TeachersMarkup } from "../../components/TeachersCard/TeachersCard"
+import { TeachersMarkup } from '../../components/TeachersCard/TeachersCard';
 import { database } from '../../firebaseconfig/config';
-import { languages, levels, price } from "../../helpers/optionFilter";
+import { languages, levels, price } from '../../helpers/optionFilter';
 import { TiDelete } from 'react-icons/ti';
-import { addFilter, addFilterName, deleteFilter } from "../../redux/sliceFilter";
+import { addFilter, addFilterName, deleteFilter } from '../../redux/sliceFilter';
 import { useLocation } from 'react-router-dom';
-import { Button, Em, NotFound, Title, Wrapper } from './Filter.styled';
+import styles from './Filter.module.css';
 
 const Input = styled(Select)(() => ({
   fontFamily: '"Roboto", sans-serif',
@@ -29,90 +29,67 @@ export const Filter = () => {
   const dispatch = useDispatch();
   const filter = useSelector(state => state.filter.filterTeachers);
   const { pathname } = useLocation();
-
   const dbRef = ref(database, 'teachers');
 
-  const [options, setOptions] = useState({
-    language: '',
-    levels: '',
-    price: '',
-  });
-  const [item, setItem] = useState({
-    language: [],
-    levels: [],
-  });
+  const [options, setOptions] = useState({ language: '', levels: '', price: '' });
+  const [item, setItem] = useState({ language: [], levels: [] });
   const [search, setSearch] = useState(false);
 
-  const handelClickLanguage = useCallback(
-    ev => {
-      const selectedLanguage = ev.target.value;
-      setOptions(prev => ({ ...prev, language: selectedLanguage }));
-      setSearch(true);
+  const handelClickLanguage = useCallback(ev => {
+    const selectedLanguage = ev.target.value;
+    setOptions(prev => ({ ...prev, language: selectedLanguage }));
+    setSearch(true);
 
-      const q = query(dbRef, orderByChild('languages'));
+    const q = query(dbRef, orderByChild('languages'));
+    if (options.language !== selectedLanguage) {
+      setOptions(prev => ({ ...prev, price: '', levels: '' }));
+    }
 
-      if (options.language !== selectedLanguage) {
-        setOptions(prev => ({ ...prev, price: '', levels: '' }));
-      }
+    onValue(q, snapshot => {
+      const teachers = snapshot.val();
+      const language = Object.keys(teachers)
+        .filter(key => teachers[key].languages.includes(selectedLanguage))
+        .map(key => ({ ...teachers[key] }));
 
-      onValue(q, snapshot => {
-        const teachers = snapshot.val();
+      setItem(prev => ({ ...prev, language }));
+      dispatch(addFilterName(selectedLanguage));
+      dispatch(addFilter(language));
+    });
+  }, [dbRef, dispatch, options.language]);
 
-        const language = Object.keys(teachers)
-          .filter(key => teachers[key].languages.includes(selectedLanguage))
-          .map(key => ({ ...teachers[key] }));
+  const handelClickLanguageLevel = useCallback(ev => {
+    const selectedLevels = ev.target.value;
+    setOptions(prev => ({ ...prev, levels: selectedLevels }));
+    setSearch(true);
 
-        setItem(prev => ({ ...prev, language }));
+    if (options.price !== '') {
+      setOptions(prev => ({ ...prev, price: '' }));
+    }
 
-        dispatch(addFilterName(selectedLanguage));
-        return dispatch(addFilter(language));
-      });
-    },
-    [dbRef, dispatch, options.language]
-  );
+    const levelsFiltered = item.language.filter(teacher =>
+      teacher.levels.includes(selectedLevels)
+    );
 
-  const handelClickLanguageLevel = useCallback(
-    ev => {
-      const selectedLevels = ev.target.value;
-      setOptions(prev => ({ ...prev, levels: selectedLevels }));
-      setSearch(true);
+    setItem(prev => ({ ...prev, levels: levelsFiltered }));
+    dispatch(addFilter(levelsFiltered));
+  }, [options.price, item, dispatch]);
 
-      if (options.price !== '') {
-        setOptions(prev => ({ ...prev, price: '' }));
-      }
+  const handelClickPrice = useCallback(ev => {
+    const selectedPrice = ev.target.value;
+    setOptions(prev => ({ ...prev, price: selectedPrice }));
+    setSearch(true);
 
-      const levels = item.language.filter(teacher =>
-        teacher.levels.includes(selectedLevels)
-      );
+    const filterByLevel = item.levels.length !== 0 ? item.levels : item.language;
+    const teachers = filterByLevel.filter(
+      teacher => teacher.price_per_hour >= Number(selectedPrice)
+    );
 
-      setItem(prev => ({ ...prev, levels }));
+    const teacherSort = [...teachers].sort(
+      (a, b) => a.price_per_hour - b.price_per_hour
+    );
 
-      return dispatch(addFilter(levels));
-    },
-    [options.price, item, dispatch]
-  );
-
-  const handelClickPrice = useCallback(
-    ev => {
-      const selectedPrice = ev.target.value;
-      setOptions(prev => ({ ...prev, price: selectedPrice }));
-      setSearch(true);
-
-      const filterByLevel =
-        item.levels.length !== 0 ? item.levels : item.language;
-
-      const teachers = filterByLevel.filter(
-        teacher => teacher.price_per_hour >= Number(selectedPrice)
-      );
-
-      const teacherSort = [...teachers].sort(
-        (a, b) => a.price_per_hour - b.price_per_hour
-      );
-
-      return dispatch(addFilter(teacherSort));
-    },
-    [item, dispatch]
-  );
+    dispatch(addFilter(teacherSort));
+  }, [item, dispatch]);
 
   useEffect(() => {
     if (pathname !== '/teachers') {
@@ -121,68 +98,68 @@ export const Filter = () => {
   }, [dispatch, pathname]);
 
   const clearFilter = () => {
-    setOptions({
-      language: '',
-      levels: '',
-      price: '',
-    });
-
+    setOptions({ language: '', levels: '', price: '' });
     setSearch(false);
-    return dispatch(deleteFilter());
+    dispatch(deleteFilter());
   };
 
   return (
     <>
-      <Wrapper>
+      <div className={styles.wrapper}>
         <FormControl sx={{ marginRight: '20px', minWidth: 221 }} size="small">
-          <Title>Languages</Title>
+          <p className={styles.title}>Languages</p>
           <Input value={options.language} onChange={handelClickLanguage}>
-            {languages.map((options, index) => (
-              <MenuItem value={options} key={index}>
-                <Em>{options}</Em>
+            {languages.map((option, index) => (
+              <MenuItem value={option} key={index}>
+                <em className={styles.em}>{option}</em>
               </MenuItem>
             ))}
           </Input>
         </FormControl>
+
         <FormControl sx={{ marginRight: '20px', minWidth: 198 }} size="small">
-          <Title>Level of knowledge</Title>
+          <p className={styles.title}>Level of knowledge</p>
           <Input
             value={options.levels}
             onChange={handelClickLanguageLevel}
             disabled={options.language === ''}
           >
-            {levels.map((options, index) => (
-              <MenuItem value={options} key={index}>
-                <Em>{options}</Em>
+            {levels.map((option, index) => (
+              <MenuItem value={option} key={index}>
+                <em className={styles.em}>{option}</em>
               </MenuItem>
             ))}
           </Input>
         </FormControl>
+
         <FormControl sx={{ minWidth: 124 }} size="small">
-          <Title>Price</Title>
+          <p className={styles.title}>Price</p>
           <Input
             value={options.price}
             onChange={handelClickPrice}
             disabled={options.language === ''}
           >
-            {price.map((options, index) => (
-              <MenuItem value={options} key={index}>
-                <Em>{options}</Em>
+            {price.map((option, index) => (
+              <MenuItem value={option} key={index}>
+                <em className={styles.em}>{option}</em>
               </MenuItem>
             ))}
           </Input>
         </FormControl>
+
         {Object.values(options).join('') !== '' && (
-          <Button type="button" onClick={clearFilter}>
+          <button type="button" onClick={clearFilter} className={styles.button}>
             <TiDelete />
-          </Button>
+          </button>
         )}
-      </Wrapper>
+      </div>
+
       {filter.length === 0 && search && (
-        <NotFound>
+        <p className={styles.notFound}>
           Sorry, we could not find a teacher that fits your preferences. Feel free to browse through our available list. 😊
-        </NotFound>
+        </p>
       )}
+
       <TeachersMarkup item={filter} />
     </>
   );
