@@ -4,7 +4,7 @@ import { ref, child, get } from 'firebase/database';
 import { database } from '../../firebaseconfig/config';
 import styles from './TeachersPage.module.css';
 import { useEffect, useState } from 'react';
-import {TeachersMarkup} from "../../components/TeachersCard/TeachersCard";
+import { TeachersMarkup } from "../../components/TeachersCard/TeachersCard";
 
 const TEACHERS_COLLECTION = 'teachers';
 const TEACHERS_PER_PAGE = 4;

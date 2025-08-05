@@ -7,18 +7,9 @@ import { useSelector } from 'react-redux';
 import { auth, database } from '../../firebaseconfig/config';
 import { useFavorite } from '../../helpers/useFavorite';
 import { ReviewerComponent } from './Rewievers';
-import { AboutTeacher } from './AboutTeacher';
-import {
-  ButtonBookLesson,
-  ButtonRM,
-  ItemLevels,
-  ItemTeacher,
-  ListLevels,
-  ListTeacher,
-  Wrapper,
-  WrapperImg,
-} from './TeachersMarkup.styled';
+import { TeacherInfo } from './TeacherInfo';
 
+import styles from './TeachersCard.module.css';  // CSS Modules import
 
 export const TeachersMarkup = ({ item }) => {
   const [visibility, setVisibility] = useState({});
@@ -64,7 +55,7 @@ export const TeachersMarkup = ({ item }) => {
 
   return (
     <>
-      <ListTeacher>
+      <ul className={styles.listTeacher}>
         {item.map(
           ({
             name,
@@ -82,27 +73,25 @@ export const TeachersMarkup = ({ item }) => {
             id,
           }) => {
             return (
-              <ItemTeacher key={id}>
-                <WrapperImg>
-                  <StyledBadge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                    variant="dot"
-                  >
-                    <Avatar
-                      src={avatar_url}
-                      alt={experience}
-                      width="96"
-                      height="96"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                      }}
-                    />
-                  </StyledBadge>
-                </WrapperImg>
-                <Wrapper>
-                  <AboutTeacher
+              <li key={id} className={styles.itemTeacher}>
+                <div className={styles.wrapperImg}>
+                  <Avatar
+                    src={avatar_url}
+                    alt={experience}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '100px',
+                      border: '3px solid #fbe9ba',
+                      padding: '12px',
+                      background: '#fff',
+                      overflow: 'hidden',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+                <div className={styles.wrapper}>
+                  <TeacherInfo
                     lessons_done={lessons_done}
                     rating={rating}
                     price_per_hour={price_per_hour}
@@ -117,14 +106,15 @@ export const TeachersMarkup = ({ item }) => {
                     conditions={conditions}
                   />
                   {!visibility[id] && (
-                    <ButtonRM
+                    <button
                       type="button"
+                      className={styles.buttonRM}
                       onClick={() =>
                         setVisibility({ ...visibility, [id]: true })
                       }
                     >
                       Read more
-                    </ButtonRM>
+                    </button>
                   )}
                   {visibility[id] && (
                     <ReviewerComponent
@@ -132,27 +122,28 @@ export const TeachersMarkup = ({ item }) => {
                       reviews={reviews}
                     />
                   )}
-                  <ListLevels>
+                  <ul className={styles.listLevels}>
                     {levels.map((i, index) => (
-                      <ItemLevels key={index}>
+                      <li key={index} className={styles.itemLevels}>
                         <p>{i}</p>
-                      </ItemLevels>
+                      </li>
                     ))}
-                  </ListLevels>
+                  </ul>
                   {visibility[id] && (
-                    <ButtonBookLesson
+                    <button
                       type="button"
+                      className={styles.buttonBookLesson}
                       onClick={() => onClickModal(id)}
                     >
                       Book trial lesson
-                    </ButtonBookLesson>
+                    </button>
                   )}
-                </Wrapper>
-              </ItemTeacher>
+                </div>
+              </li>
             );
           }
         )}
-      </ListTeacher>
+      </ul>
       {isOpen.open && isOpen.name === 'bookLesson' && (
         <ModalComponent onClose={closeModal}>
           <BookLesson teacher={teacher} />
@@ -166,3 +157,5 @@ export const TeachersMarkup = ({ item }) => {
     </>
   );
 };
+
+export default TeachersMarkup;
