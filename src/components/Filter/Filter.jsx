@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ref, query, orderByChild, onValue } from 'firebase/database';
+import { ref, onValue } from 'firebase/database';
 import { FormControl, MenuItem, Select, styled } from '@mui/material';
 import { TeachersMarkup } from '../../components/TeachersCard/TeachersCard';
 import { database } from '../../firebaseconfig/config';
@@ -29,33 +29,50 @@ export const Filter = () => {
   const dispatch = useDispatch();
   const filter = useSelector(state => state.filter.filterTeachers);
   const { pathname } = useLocation();
-  const dbRef = ref(database, 'teachers');
 
+  const [allTeachers, setAllTeachers] = useState([]);
   const [options, setOptions] = useState({ language: '', levels: '', price: '' });
   const [item, setItem] = useState({ language: [], levels: [] });
   const [search, setSearch] = useState(false);
+
+  // Firebase'den öğretmenleri çekiyoruz, sadece component mount olduğunda
+  useEffect(() => {
+    const dbRef = ref(database, 'teachers');
+
+    const unsubscribe = onValue(dbRef, snapshot => {
+      const teachersData = snapshot.val();
+      if (!teachersData) {
+        setAllTeachers([]);
+        return;
+      }
+      const teachersList = Object.keys(teachersData).map(key => teachersData[key]);
+      setAllTeachers(teachersList);
+      // Eğer filtre yoksa tüm öğretmenleri göster
+      if (!search) {
+        dispatch(addFilter(teachersList));
+      }
+    });
+
+    return () => unsubscribe();
+  }, [dispatch, search]);
 
   const handelClickLanguage = useCallback(ev => {
     const selectedLanguage = ev.target.value;
     setOptions(prev => ({ ...prev, language: selectedLanguage }));
     setSearch(true);
 
-    const q = query(dbRef, orderByChild('languages'));
     if (options.language !== selectedLanguage) {
       setOptions(prev => ({ ...prev, price: '', levels: '' }));
     }
 
-    onValue(q, snapshot => {
-      const teachers = snapshot.val();
-      const language = Object.keys(teachers)
-        .filter(key => teachers[key].languages.includes(selectedLanguage))
-        .map(key => ({ ...teachers[key] }));
+    const filteredByLanguage = allTeachers.filter(teacher =>
+      teacher.languages.includes(selectedLanguage)
+    );
 
-      setItem(prev => ({ ...prev, language }));
-      dispatch(addFilterName(selectedLanguage));
-      dispatch(addFilter(language));
-    });
-  }, [dbRef, dispatch, options.language]);
+    setItem(prev => ({ ...prev, language: filteredByLanguage }));
+    dispatch(addFilterName(selectedLanguage));
+    dispatch(addFilter(filteredByLanguage));
+  }, [allTeachers, dispatch, options.language]);
 
   const handelClickLanguageLevel = useCallback(ev => {
     const selectedLevels = ev.target.value;
@@ -66,13 +83,13 @@ export const Filter = () => {
       setOptions(prev => ({ ...prev, price: '' }));
     }
 
-    const levelsFiltered = item.language.filter(teacher =>
+    const filteredByLevel = item.language.filter(teacher =>
       teacher.levels.includes(selectedLevels)
     );
 
-    setItem(prev => ({ ...prev, levels: levelsFiltered }));
-    dispatch(addFilter(levelsFiltered));
-  }, [options.price, item, dispatch]);
+    setItem(prev => ({ ...prev, levels: filteredByLevel }));
+    dispatch(addFilter(filteredByLevel));
+  }, [item.language, dispatch, options.price]);
 
   const handelClickPrice = useCallback(ev => {
     const selectedPrice = ev.target.value;
@@ -80,16 +97,16 @@ export const Filter = () => {
     setSearch(true);
 
     const filterByLevel = item.levels.length !== 0 ? item.levels : item.language;
-    const teachers = filterByLevel.filter(
+    const filteredByPrice = filterByLevel.filter(
       teacher => teacher.price_per_hour >= Number(selectedPrice)
     );
 
-    const teacherSort = [...teachers].sort(
+    const sortedTeachers = [...filteredByPrice].sort(
       (a, b) => a.price_per_hour - b.price_per_hour
     );
 
-    dispatch(addFilter(teacherSort));
-  }, [item, dispatch]);
+    dispatch(addFilter(sortedTeachers));
+  }, [item.levels, item.language, dispatch]);
 
   useEffect(() => {
     if (pathname !== '/teachers') {
@@ -101,6 +118,8 @@ export const Filter = () => {
     setOptions({ language: '', levels: '', price: '' });
     setSearch(false);
     dispatch(deleteFilter());
+    // Tüm öğretmenleri tekrar göster
+    dispatch(addFilter(allTeachers));
   };
 
   return (

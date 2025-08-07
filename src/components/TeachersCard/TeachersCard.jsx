@@ -8,8 +8,9 @@ import { auth, database } from '../../firebaseconfig/config';
 import { useFavorite } from '../../helpers/useFavorite';
 import { ReviewerComponent } from './Rewievers';
 import { TeacherInfo } from './TeacherInfo';
-
-import styles from './TeachersCard.module.css';  // CSS Modules import
+import { StyledBadge } from './StyledBadge';
+import { BookLesson } from "../BookLesson/BookLesson";
+import styles from './TeachersCard.module.css';
 
 export const TeachersMarkup = ({ item }) => {
   const [visibility, setVisibility] = useState({});
@@ -20,10 +21,10 @@ export const TeachersMarkup = ({ item }) => {
 
   const onClickModal = id => {
     const detailsTeacher = item.find(teacher => teacher.id === id);
+    if (!detailsTeacher) return;
     setTeacher(detailsTeacher);
     openModal('bookLesson');
-
-    setVisibility({ ...visibility, [id]: false });
+    // visibility güncellemesini kaldırdım çünkü modal açılmasıyla ilgisi yok
   };
 
   const deleteFavorite = id => {
@@ -33,35 +34,25 @@ export const TeachersMarkup = ({ item }) => {
 
   const addFavorite = id => {
     const favoriteTeacher = item.find(teacher => teacher.id === id);
-
     const userRef = ref(database, `/favorite/${auth.currentUser.uid}/${id}`);
-
     set(userRef, favoriteTeacher);
   };
 
   const handelClick = id => {
-    if (!authUser) {
-      return openModal('notAuth');
-    }
-
+    if (!authUser) return openModal('notAuth');
     const isFavorite = favorite.find(item => item.id === id);
-
-    if (isFavorite) {
-      return deleteFavorite(id);
-    } else {
-      return addFavorite(id);
-    }
+    return isFavorite ? deleteFavorite(id) : addFavorite(id);
   };
 
   return (
     <>
       <ul className={styles.listTeacher}>
-        {item.map(
-          ({
+        {item.map((teacher, index) => {
+          const {
             name,
             surname,
             languages,
-            levels,
+            levels = [],
             rating,
             reviews,
             price_per_hour,
@@ -71,84 +62,89 @@ export const TeachersMarkup = ({ item }) => {
             conditions,
             experience,
             id,
-          }) => {
-            return (
-              <li key={id} className={styles.itemTeacher}>
-                <div className={styles.wrapperImg}>
+          } = teacher;
+
+          const keyId = id || `${name}-${surname}-${index}`;
+
+          return (
+            <li key={keyId} className={styles.itemTeacher}>
+              <div className={styles.wrapperImg}>
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  variant="dot"
+                >
                   <Avatar
                     src={avatar_url}
                     alt={experience}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: '100px',
-                      border: '3px solid #fbe9ba',
-                      padding: '12px',
-                      background: '#fff',
-                      overflow: 'hidden',
-                      boxSizing: 'border-box',
-                    }}
+                    width="96"
+                    height="96"
+                    style={{ width: '100%', height: '100%' }}
                   />
-                </div>
-                <div className={styles.wrapper}>
-                  <TeacherInfo
-                    lessons_done={lessons_done}
-                    rating={rating}
-                    price_per_hour={price_per_hour}
-                    favorite={favorite}
-                    id={id}
-                    authUser={authUser}
-                    handelClick={handelClick}
-                    name={name}
-                    surname={surname}
-                    languages={languages}
-                    lesson_info={lesson_info}
-                    conditions={conditions}
+                </StyledBadge>
+              </div>
+              <div className={styles.wrapper}>
+                <TeacherInfo
+                  lessons_done={lessons_done}
+                  rating={rating}
+                  price_per_hour={price_per_hour}
+                  favorite={favorite}
+                  id={id}
+                  authUser={authUser}
+                  handelClick={handelClick}
+                  name={name}
+                  surname={surname}
+                  languages={languages}
+                  lesson_info={lesson_info}
+                  conditions={conditions}
+                />
+
+                {!visibility[keyId] && (
+                  <button
+                    type="button"
+                    className={styles.buttonRM}
+                    onClick={() => setVisibility({ ...visibility, [keyId]: true })}
+                  >
+                    Read more
+                  </button>
+                )}
+
+                {visibility[keyId] && (
+                  <ReviewerComponent
+                    experience={experience}
+                    reviews={reviews}
                   />
-                  {!visibility[id] && (
-                    <button
-                      type="button"
-                      className={styles.buttonRM}
-                      onClick={() =>
-                        setVisibility({ ...visibility, [id]: true })
-                      }
-                    >
-                      Read more
-                    </button>
-                  )}
-                  {visibility[id] && (
-                    <ReviewerComponent
-                      experience={experience}
-                      reviews={reviews}
-                    />
-                  )}
-                  <ul className={styles.listLevels}>
-                    {levels.map((i, index) => (
-                      <li key={index} className={styles.itemLevels}>
-                        <p>{i}</p>
-                      </li>
-                    ))}
-                  </ul>
-                  {visibility[id] && (
-                    <button
-                      type="button"
-                      className={styles.buttonBookLesson}
-                      onClick={() => onClickModal(id)}
-                    >
-                      Book trial lesson
-                    </button>
-                  )}
-                </div>
-              </li>
-            );
-          }
-        )}
+                )}
+
+                <ul className={styles.listLevels}>
+                  {levels.map((level, i) => (
+                    <li key={`${level}-${i}`} className={styles.itemLevels}>
+                      <p>{level}</p>
+                    </li>
+                  ))}
+                </ul>
+
+                {visibility[keyId] && (
+                  <button
+                    type="button"
+                    className={styles.buttonBookLesson}
+                    onClick={() => onClickModal(id)}
+                  >
+                    Book trial lesson
+                  </button>
+                )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
-      {isOpen.open && isOpen.name === 'bookLesson' && (
+
+      {isOpen.open && isOpen.name === 'bookLesson' && teacher && (
         <ModalComponent onClose={closeModal}>
           <BookLesson teacher={teacher} />
         </ModalComponent>
       )}
+
       {isOpen.open && isOpen.name === 'notAuth' && (
         <ModalComponent onClose={closeModal}>
           <NotAuth />
