@@ -1,5 +1,5 @@
-import { FaStar } from 'react-icons/fa';
-import styles from './TeachersCard.module.css';
+import { FaStar } from "react-icons/fa";
+import styles from "./TeachersCard.module.css";
 
 export const ReviewerComponent = ({ experience, reviews }) => {
   return (

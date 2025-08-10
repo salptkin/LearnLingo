@@ -1,5 +1,5 @@
-import img from '/homepagegirl.png';
-import styles from './Loader.module.css';
+import img from "/homepagegirl.png";
+import styles from "./Loader.module.css";
 
 export const Loader = () => {
   return (

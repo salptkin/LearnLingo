@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 
 const VITE_APP_API_KEY = import.meta.env.VITE_APP_API_KEY;
 const VITE_AUTH_DOMAIN = import.meta.env.VITE_AUTH_DOMAIN;

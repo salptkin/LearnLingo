@@ -1,13 +1,12 @@
-import { GoBook } from 'react-icons/go';
-import { FaStar, FaRegHeart, FaHeart } from 'react-icons/fa';
-import styles from './TeachersCard.module.css';
+import { GoBook } from "react-icons/go";
+import { FaStar, FaRegHeart, FaHeart } from "react-icons/fa";
+import styles from "./TeachersCard.module.css";
 
 export const TeacherInfo = ({
   lessons_done,
   rating,
   price_per_hour,
-  favorite,
-  id,
+  isFavorited,
   authUser,
   handelClick,
   name,
@@ -23,9 +22,7 @@ export const TeacherInfo = ({
         <ul className={styles.listLessons}>
           <li className={styles.itemLessons}>
             <p className={styles.detailsLessons}>
-              <span className={styles.lesson_online}>
-                <GoBook />
-              </span>
+              <span className={styles.lesson_online}><GoBook /></span>
               Lessons online
             </p>
           </li>
@@ -34,52 +31,44 @@ export const TeacherInfo = ({
           </li>
           <li className={styles.itemLessons}>
             <p className={styles.detailsLessons}>
-              <span className={styles.rating}>
-                <FaStar />
-              </span>
+              <span className={styles.rating}><FaStar /></span>
               Rating: {rating}
             </p>
           </li>
           <li className={styles.itemLessons}>
             <p className={styles.detailsLessons}>
-              Price / 1 hour:
-              <span className={styles.price}>{price_per_hour}$</span>
+              Price / 1 hour: <span className={styles.price}>{price_per_hour}$</span>
             </p>
           </li>
           <li className={styles.itemLessons}>
             <button
               type="button"
               className={styles.favoriteButton}
-              onClick={() => handelClick(id)}
+              onClick={handelClick}
             >
-              {favorite.find(item => item.id === id) && authUser ? (
-                <FaHeart color="#F4C550" />
-              ) : (
-                <FaRegHeart />
-              )}
+              {isFavorited && authUser ? <FaHeart color="#F4C550" /> : <FaRegHeart />}
             </button>
           </li>
         </ul>
       </div>
+
       <div className={styles.wrapperTeacher}>
         <p className={styles.nameTeacher}>{`${name} ${surname}`}</p>
         <ul className={styles.listDetailsTeacher}>
           <li className={styles.itemDetailsTeacher}>
             <p className={styles.titleDetailsTeacher}>
               <span>Speaks: </span>
-              <span className={styles.languages}>{languages.join(', ')}</span>
+              <span className={styles.languages}>{languages.join(", ")}</span>
             </p>
           </li>
           <li className={styles.itemDetailsTeacher}>
             <p className={styles.titleDetailsTeacher}>
-              <span>Lesson Info: </span>
-              {lesson_info}
+              <span>Lesson Info: </span>{lesson_info}
             </p>
           </li>
           <li className={styles.itemDetailsTeacher}>
             <p className={styles.titleDetailsTeacher}>
-              <span>Conditions: </span>
-              {conditions.join(' ')}
+              <span>Conditions: </span>{conditions.join(" ")}
             </p>
           </li>
         </ul>

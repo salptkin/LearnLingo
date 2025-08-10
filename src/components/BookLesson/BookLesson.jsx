@@ -1,5 +1,5 @@
-import styles from './BookLesson.module.css';
-import { FormComponent } from './FormComponent';
+import styles from "./BookLesson.module.css";
+import { FormComponent } from "./FormComponent";
 
 export const BookLesson = ({ teacher }) => {
   return (

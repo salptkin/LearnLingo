@@ -1,47 +1,49 @@
-import { useState } from 'react';
-import { set, ref, remove } from 'firebase/database';
-import { Avatar } from '@mui/material';
-import { useModal } from '../../helpers/useModal';
-import { ModalComponent } from '../Modal/Modal';
-import { useSelector } from 'react-redux';
-import { auth, database } from '../../firebaseconfig/config';
-import { useFavorite } from '../../helpers/useFavorite';
-import { ReviewerComponent } from './Rewievers';
-import { TeacherInfo } from './TeacherInfo';
-import { StyledBadge } from './StyledBadge';
+import { useState } from "react";
+import { set, ref, remove } from "firebase/database";
+import { Avatar } from "@mui/material";
+import { useModal } from "../../helpers/useModal";
+import { ModalComponent } from "../Modal/Modal";
+import { useSelector } from "react-redux";
+import { auth, database } from "../../firebaseconfig/config";
+import { useFavorite } from "../../helpers/useFavorite";
+import { ReviewerComponent } from "./Rewievers";
+import { TeacherInfo } from "./TeacherInfo";
+import { StyledBadge } from "./StyledBadge";
 import { BookLesson } from "../BookLesson/BookLesson";
-import styles from './TeachersCard.module.css';
+import styles from "./TeachersCard.module.css";
 
 export const TeachersMarkup = ({ item }) => {
   const [visibility, setVisibility] = useState({});
-  const [teacher, setTeacher] = useState();
+  const [teacher, setTeacher] = useState(null);
   const { isOpen, openModal, closeModal } = useModal();
   const authUser = useSelector(state => state.authUser.token);
   const favorite = useFavorite(database);
 
-  const onClickModal = id => {
-    const detailsTeacher = item.find(teacher => teacher.id === id);
+  const onClickModal = (id) => {
+    const detailsTeacher = item.find(t => String(t.id) === String(id));
     if (!detailsTeacher) return;
     setTeacher(detailsTeacher);
     openModal('bookLesson');
-    // visibility güncellemesini kaldırdım çünkü modal açılmasıyla ilgisi yok
   };
 
-  const deleteFavorite = id => {
+  const deleteFavorite = (id) => {
     const favRef = ref(database, `/favorite/${auth.currentUser.uid}/${id}`);
     return remove(favRef);
   };
 
-  const addFavorite = id => {
-    const favoriteTeacher = item.find(teacher => teacher.id === id);
+  const addFavorite = (teacherObj) => {
+    const id = teacherObj?.id;
+    if (!id) return;
     const userRef = ref(database, `/favorite/${auth.currentUser.uid}/${id}`);
-    set(userRef, favoriteTeacher);
+    set(userRef, { id, ...teacherObj });
   };
 
-  const handelClick = id => {
+  const handelClick = (teacherObj) => {
     if (!authUser) return openModal('notAuth');
-    const isFavorite = favorite.find(item => item.id === id);
-    return isFavorite ? deleteFavorite(id) : addFavorite(id);
+    const id = teacherObj?.id;
+    if (!id) return;
+    const isFavorite = favorite.some(f => String(f.id) === String(id));
+    return isFavorite ? deleteFavorite(id) : addFavorite(teacherObj);
   };
 
   return (
@@ -49,6 +51,7 @@ export const TeachersMarkup = ({ item }) => {
       <ul className={styles.listTeacher}>
         {item.map((teacher, index) => {
           const {
+            id,
             name,
             surname,
             languages,
@@ -61,10 +64,10 @@ export const TeachersMarkup = ({ item }) => {
             lesson_info,
             conditions,
             experience,
-            id,
           } = teacher;
 
           const keyId = id || `${name}-${surname}-${index}`;
+          const isFavorited = favorite.some(f => String(f.id) === String(id));
 
           return (
             <li key={keyId} className={styles.itemTeacher}>
@@ -83,15 +86,16 @@ export const TeachersMarkup = ({ item }) => {
                   />
                 </StyledBadge>
               </div>
+
               <div className={styles.wrapper}>
                 <TeacherInfo
                   lessons_done={lessons_done}
                   rating={rating}
                   price_per_hour={price_per_hour}
-                  favorite={favorite}
+                  isFavorited={isFavorited}
                   id={id}
                   authUser={authUser}
-                  handelClick={handelClick}
+                  handelClick={() => handelClick(teacher)}
                   name={name}
                   surname={surname}
                   languages={languages}
@@ -103,17 +107,14 @@ export const TeachersMarkup = ({ item }) => {
                   <button
                     type="button"
                     className={styles.buttonRM}
-                    onClick={() => setVisibility({ ...visibility, [keyId]: true })}
+                    onClick={() => setVisibility(prev => ({ ...prev, [keyId]: true }))}
                   >
                     Read more
                   </button>
                 )}
 
                 {visibility[keyId] && (
-                  <ReviewerComponent
-                    experience={experience}
-                    reviews={reviews}
-                  />
+                  <ReviewerComponent experience={experience} reviews={reviews} />
                 )}
 
                 <ul className={styles.listLevels}>

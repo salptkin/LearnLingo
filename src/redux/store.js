@@ -7,12 +7,12 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-import { configureStore } from '@reduxjs/toolkit';
-import { authUserSlice } from './sliceAuth';
-import { filterSlice } from './sliceFilter';
+import { configureStore } from "@reduxjs/toolkit";
+import { authUserSlice } from "./sliceAuth";
+import { filterSlice } from "./sliceFilter";
 
 const persistConfig = {
   key: 'authUser',

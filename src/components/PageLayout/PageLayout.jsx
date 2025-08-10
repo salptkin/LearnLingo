@@ -1,17 +1,18 @@
 import { Container } from "../../globalStyles";
-import { Outlet, NavLink } from 'react-router-dom';
-import { FiLogIn } from 'react-icons/fi';
-import { Suspense, useEffect, useState } from 'react';
-import styles from './PageLayout.module.css';
-import { Loader } from '../../components/Loader/Loader';
-import { useModal } from '../../helpers/useModal';
-import { ModalComponent } from '../../components/Modal/Modal';
-import { Register } from '../Auth/RegisterForm';
-import { Login } from '../Auth/LoginForm';
-import { auth } from '../../firebaseconfig/config';
-import { signOut } from 'firebase/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteToken } from '../../redux/sliceAuth';
+import { Outlet, NavLink } from "react-router-dom";
+import { FiLogIn } from "react-icons/fi";
+import { Suspense, useEffect, useState } from "react";
+import styles from "./PageLayout.module.css";
+import { Loader } from "../../components/Loader/Loader";
+import { useModal } from "../../helpers/useModal";
+import { ModalComponent } from "../../components/Modal/Modal";
+import { Register } from "../Auth/RegisterForm";
+import { Login } from "../Auth/LoginForm";
+import { auth } from "../../firebaseconfig/config";
+import { signOut } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteToken } from "../../redux/sliceAuth";
+import turkey from "/turkey.png";
 
 const Layout = () => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -47,8 +48,8 @@ const Layout = () => {
           <div className={styles.headerContainer}>
             <div className={styles.wrapperLogo}>
               <img
-                className={styles.imgLogo}
-                alt="Flag Ukraine"
+                src={turkey}
+                alt="Flag Turkey"
                 width="28"
                 height="28"
               />

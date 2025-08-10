@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
-import styles from './Modal.module.css';
-import { createPortal } from 'react-dom';
+import { useEffect } from "react";
+import { AiOutlineClose } from "react-icons/ai";
+import styles from "./Modal.module.css";
+import { createPortal } from "react-dom";
 
 const modalRoot = document.getElementById('modal');
 

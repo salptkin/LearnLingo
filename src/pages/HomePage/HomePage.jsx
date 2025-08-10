@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import { Container } from '../../globalStyles';
-import girl from '/homepagegirl.png';
-import computer from '/computer.png';
-import styles from './HomePage.module.css';
+import { useNavigate } from "react-router-dom";
+import { Container } from "../../globalStyles";
+import girl from "/homepagegirl.png";
+import computer from "/computer.png";
+import styles from "./HomePage.module.css";
 
 const HomePage = () => {
   const navigate = useNavigate();

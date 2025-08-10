@@ -1,9 +1,9 @@
 import { Filter } from "../../components/Filter/Filter";
-import { useSelector } from 'react-redux';
-import { ref, child, get } from 'firebase/database';
-import { database } from '../../firebaseconfig/config';
-import styles from './TeachersPage.module.css';
-import { useEffect, useState } from 'react';
+import { useSelector } from "react-redux";
+import { ref, child, get } from "firebase/database";
+import { database } from "../../firebaseconfig/config";
+import styles from "./TeachersPage.module.css";
+import { useEffect, useState } from "react";
 import { TeachersMarkup } from "../../components/TeachersCard/TeachersCard";
 
 const TEACHERS_COLLECTION = 'teachers';

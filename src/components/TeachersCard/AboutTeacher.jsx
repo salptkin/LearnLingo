@@ -1,6 +1,6 @@
-import { GoBook } from 'react-icons/go';
-import { FaStar, FaRegHeart, FaHeart } from 'react-icons/fa';
-import styles from './AboutTeacher.module.css';
+import { GoBook } from "react-icons/go";
+import { FaStar, FaRegHeart, FaHeart } from "react-icons/fa";
+import styles from "./AboutTeacher.module.css";
 
 export const AboutTeacher = ({
   lessons_done,

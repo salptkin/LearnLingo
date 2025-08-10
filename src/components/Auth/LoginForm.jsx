@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import { FiEyeOff, FiEye } from 'react-icons/fi';
-import styles from './LoginForm.module.css';
-import { Regexp } from '../../helpers/regexp';
-import { ERROR_MESSAGES } from '../../helpers/errormsg';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebaseconfig/config';
-import { addToken } from '../../redux/sliceAuth';
-import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import { styleToastify } from '../../components/Toastify/Toastify';
+import { useState } from "react";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import { FiEyeOff, FiEye } from "react-icons/fi";
+import styles from "./LoginForm.module.css";
+import { Regexp } from "../../helpers/regexp";
+import { ERROR_MESSAGES } from "../../helpers/errormsg";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseconfig/config";
+import { addToken } from "../../redux/sliceAuth";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { styleToastify } from "../../components/Toastify/Toastify";
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string()

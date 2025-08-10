@@ -1,0 +1,13 @@
+.section {
+    background-color: #f8f8f8;
+    min-height: calc(100vh - 83px);
+    padding-top: 96px;
+    padding-bottom: 96px;
+}
+
+.title {
+    text-align: center;
+    color: var(--main-text-color);
+    font-size: 26px;
+    line-height: 1.25;
+}

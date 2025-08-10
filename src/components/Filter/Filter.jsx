@@ -1,28 +1,22 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ref, onValue } from 'firebase/database';
-import { FormControl, MenuItem, Select, styled } from '@mui/material';
-import { TeachersMarkup } from '../../components/TeachersCard/TeachersCard';
-import { database } from '../../firebaseconfig/config';
-import { languages, levels, price } from '../../helpers/optionFilter';
-import { TiDelete } from 'react-icons/ti';
-import { addFilter, addFilterName, deleteFilter } from '../../redux/sliceFilter';
-import { useLocation } from 'react-router-dom';
-import styles from './Filter.module.css';
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ref, onValue } from "firebase/database";
+import { FormControl, MenuItem, Select, styled } from "@mui/material";
+import { TeachersMarkup } from "../../components/TeachersCard/TeachersCard";
+import { database } from "../../firebaseconfig/config";
+import { languages, levels, price } from "../../helpers/optionFilter";
+import { TiDelete } from "react-icons/ti";
+import { addFilter, addFilterName, deleteFilter } from "../../redux/sliceFilter";
+import { useLocation } from "react-router-dom";
+import styles from "./Filter.module.css";
 
 const Input = styled(Select)(() => ({
   fontFamily: '"Roboto", sans-serif',
   borderRadius: '14px',
   backgroundColor: '#fff',
-  '& .MuiOutlinedInput-notchedOutline': {
-    border: 'none',
-  },
-  '&:hover .MuiOutlinedInput-notchedOutline': {
-    border: 'none',
-  },
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    border: 'none',
-  },
+  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+  '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
+  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
 }));
 
 export const Filter = () => {
@@ -35,26 +29,26 @@ export const Filter = () => {
   const [item, setItem] = useState({ language: [], levels: [] });
   const [search, setSearch] = useState(false);
 
-  // Firebase'den öğretmenleri çekiyoruz, sadece component mount olduğunda
   useEffect(() => {
     const dbRef = ref(database, 'teachers');
 
     const unsubscribe = onValue(dbRef, snapshot => {
       const teachersData = snapshot.val();
-      if (!teachersData) {
-        setAllTeachers([]);
-        return;
-      }
-      const teachersList = Object.keys(teachersData).map(key => teachersData[key]);
+      if (!teachersData) { setAllTeachers([]); return; }
+
+      const teachersList = Object.entries(teachersData).map(([key, value]) => ({
+        id: key,
+        ...value,
+      }));
       setAllTeachers(teachersList);
-      // Eğer filtre yoksa tüm öğretmenleri göster
+
       if (!search) {
         dispatch(addFilter(teachersList));
       }
     });
 
     return () => unsubscribe();
-  }, [dispatch, search]);
+  }, [database, dispatch, search]);
 
   const handelClickLanguage = useCallback(ev => {
     const selectedLanguage = ev.target.value;
@@ -65,8 +59,8 @@ export const Filter = () => {
       setOptions(prev => ({ ...prev, price: '', levels: '' }));
     }
 
-    const filteredByLanguage = allTeachers.filter(teacher =>
-      teacher.languages.includes(selectedLanguage)
+    const filteredByLanguage = allTeachers.filter(t =>
+      t.languages.includes(selectedLanguage)
     );
 
     setItem(prev => ({ ...prev, language: filteredByLanguage }));
@@ -83,8 +77,8 @@ export const Filter = () => {
       setOptions(prev => ({ ...prev, price: '' }));
     }
 
-    const filteredByLevel = item.language.filter(teacher =>
-      teacher.levels.includes(selectedLevels)
+    const filteredByLevel = item.language.filter(t =>
+      t.levels.includes(selectedLevels)
     );
 
     setItem(prev => ({ ...prev, levels: filteredByLevel }));
@@ -98,7 +92,7 @@ export const Filter = () => {
 
     const filterByLevel = item.levels.length !== 0 ? item.levels : item.language;
     const filteredByPrice = filterByLevel.filter(
-      teacher => teacher.price_per_hour >= Number(selectedPrice)
+      t => t.price_per_hour >= Number(selectedPrice)
     );
 
     const sortedTeachers = [...filteredByPrice].sort(
@@ -118,7 +112,6 @@ export const Filter = () => {
     setOptions({ language: '', levels: '', price: '' });
     setSearch(false);
     dispatch(deleteFilter());
-    // Tüm öğretmenleri tekrar göster
     dispatch(addFilter(allTeachers));
   };
 

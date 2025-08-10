@@ -1,16 +1,16 @@
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import {
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
-} from '@mui/material';
+} from "@mui/material";
 import { Regexp } from "../../helpers/regexp";
 
-import { Formik } from 'formik';
+import { Formik } from "formik";
 import { ERROR_MESSAGES } from "../../helpers/errormsg";
-import { useSelector } from 'react-redux';
-import styles from './FormComponent.module.css';
+import { useSelector } from "react-redux";
+import styles from "./FormComponent.module.css";
 
 const options = [
   { name: 'Career and business', id: '1' },
