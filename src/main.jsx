@@ -10,7 +10,7 @@ import { persistor, store } from "./redux/store";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename="/learn-lingo">
+    <BrowserRouter>
       <PersistGate loading={<p>Loading...</p>} persistor={persistor}>
         <Provider store={store}>
           <GlobalStyle />
