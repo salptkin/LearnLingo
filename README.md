@@ -1,12 +1,63 @@
-# React + Vite
+# LearnLingo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**LearnLingo**, yabancı dil öğrenmek isteyen kullanıcıların istedikleri dilde öğretmen bulabilecekleri, filtreleme, favorilere ekleme ve deneme rezervasyonları yapabilme gibi özellikleri sunan interaktif bir web uygulamasıdır.
 
-Currently, two official plugins are available:
+🌐 **Canlı Demo:** [LearnLingo](https://learn-lingo-beta-seven.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 📌 Özellikler
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔍 **Gelişmiş Filtreleme:** A1'den C2 seviyesine kadar öğretmen filtreleme.
+- ❤️ **Favoriler:** Beğenilen öğretmenleri favorilere ekleme.
+- 📋 **Detaylı Öğretmen Profilleri:** İsim, fotoğraf, deneyim ve seviye bilgisi.
+- 📱 **Responsive Tasarım:** Mobil, tablet ve masaüstü uyumlu.
+- ⚡ **Hızlı ve Güvenli:** Firebase Realtime Database ile veri yönetimi.
+
+---
+
+## 🛠 Kullanılan Teknolojiler
+
+- **React.js** – Arayüz geliştirme
+- **JavaScript (ES6+)** – Uygulama mantığı
+- **Firebase Realtime Database** – Veri yönetimi
+- **HTML5 & CSS3** – Yapı ve tasarım
+
+---
+
+## 🚀 Kurulum
+
+1. Depoyu klonlayın:
+
+   ```bash
+   git clone https://github.com/salptkin/LearnLingo.git
+
+   ```
+
+2. Proje dizinine gidin:
+
+   ```bash
+   cd LearnLingo
+   ```
+
+3. Bağımlılıkları yükleyin:
+
+   ```bash
+   npm i
+   ```
+
+4. Uygulamayı başlatın
+
+   ```bash
+   npm run dev
+   ```
+
+5. Tarayıcınızda http://localhost:5173 adresini açarak uygulamayı görüntülebilirsiniz.
+
+## ✍️ Yazar
+
+**Samet Alptekin Eroğlu**  
+[salptkin](https://github.com/salptkin)
+
+**Canlı sayfa:**
+(https://travel-trucks-five-psi.vercel.app)
