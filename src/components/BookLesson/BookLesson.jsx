@@ -1,7 +1,7 @@
 import styles from "./BookLesson.module.css";
 import { FormComponent } from "./FormComponent";
 
-export const BookLesson = ({ teacher }) => {
+export const BookLesson = ({ teacher, onClose }) => {
   return (
     <div className={styles.section}>
       <h3 className={styles.title}>Book trial lesson</h3>
@@ -22,7 +22,7 @@ export const BookLesson = ({ teacher }) => {
           <p className={styles.nameTeacher}>{teacher?.name}</p>
         </div>
       </div>
-      <FormComponent languages={teacher?.languages} />
+      <FormComponent languages={teacher?.languages} onClose={onClose} />
     </div>
   );
 };

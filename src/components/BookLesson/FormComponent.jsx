@@ -6,7 +6,7 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { Regexp } from "../../helpers/regexp";
-
+import { toast } from "react-toastify";
 import { Formik } from "formik";
 import { ERROR_MESSAGES } from "../../helpers/errormsg";
 import { useSelector } from "react-redux";
@@ -36,12 +36,29 @@ const SignupSchema = Yup.object().shape({
 });
 
 
-export const FormComponent = ({ languages }) => {
+export const FormComponent = ({ languages, onClose }) => {
   const language = useSelector(state => state.filter.name);
   const learning = language === '' ? languages.join(', ') : language;
 
   const handelSubmit = values => {
     console.log(values);
+    
+    // Başarılı toast bildirimi göster
+    toast.success("Successful booking!", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    
+    // Modal'ı kapat
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (

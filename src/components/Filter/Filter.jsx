@@ -2,11 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ref, onValue } from "firebase/database";
 import { FormControl, MenuItem, Select, styled } from "@mui/material";
-import { TeachersCard } from "../../components/TeachersCard/TeachersCard";
 import { database } from "../../firebaseconfig/config";
 import { languages, levels, price } from "../../helpers/optionFilter";
 import { TiDelete } from "react-icons/ti";
-import { addFilter, addFilterName, deleteFilter } from "../../redux/sliceFilter";
+import { addFilter, addFilterName, deleteFilter, setSelectedLevel } from "../../redux/sliceFilter";
 import { useLocation } from "react-router-dom";
 import styles from "./Filter.module.css";
 
@@ -18,6 +17,16 @@ const Input = styled(Select)(() => ({
   '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
 }));
+
+// Duplicate'ları kaldıran yardımcı fonksiyon
+function getUniqueTeachers(arr) {
+  const seen = new Set();
+  return arr.filter(teacher => {
+    if (seen.has(teacher.id)) return false;
+    seen.add(teacher.id);
+    return true;
+  });
+}
 
 export const Filter = () => {
   const dispatch = useDispatch();
@@ -43,7 +52,7 @@ export const Filter = () => {
       setAllTeachers(teachersList);
 
       if (!search) {
-        dispatch(addFilter(teachersList));
+        // dispatch(addFilter(teachersList));
       }
     });
 
@@ -62,10 +71,10 @@ export const Filter = () => {
     const filteredByLanguage = allTeachers.filter(t =>
       t.languages.includes(selectedLanguage)
     );
-
-    setItem(prev => ({ ...prev, language: filteredByLanguage }));
+    const uniqueByLanguage = getUniqueTeachers(filteredByLanguage);
+    setItem(prev => ({ ...prev, language: uniqueByLanguage }));
     dispatch(addFilterName(selectedLanguage));
-    dispatch(addFilter(filteredByLanguage));
+    dispatch(addFilter(uniqueByLanguage));
   }, [allTeachers, dispatch, options.language]);
 
   const handelClickLanguageLevel = useCallback(ev => {
@@ -80,9 +89,10 @@ export const Filter = () => {
     const filteredByLevel = item.language.filter(t =>
       t.levels.includes(selectedLevels)
     );
-
-    setItem(prev => ({ ...prev, levels: filteredByLevel }));
-    dispatch(addFilter(filteredByLevel));
+    const uniqueByLevel = getUniqueTeachers(filteredByLevel);
+    setItem(prev => ({ ...prev, levels: uniqueByLevel }));
+    dispatch(setSelectedLevel(selectedLevels));
+    dispatch(addFilter(uniqueByLevel));
   }, [item.language, dispatch, options.price]);
 
   const handelClickPrice = useCallback(ev => {
@@ -94,25 +104,42 @@ export const Filter = () => {
     const filteredByPrice = filterByLevel.filter(
       t => t.price_per_hour >= Number(selectedPrice)
     );
-
-    const sortedTeachers = [...filteredByPrice].sort(
+    const uniqueByPrice = getUniqueTeachers(filteredByPrice);
+    const sortedTeachers = [...uniqueByPrice].sort(
       (a, b) => a.price_per_hour - b.price_per_hour
     );
-
     dispatch(addFilter(sortedTeachers));
   }, [item.levels, item.language, dispatch]);
 
   useEffect(() => {
     if (pathname !== '/teachers') {
       dispatch(deleteFilter());
+      dispatch(setSelectedLevel(''));
+      setOptions({ language: '', levels: '', price: '' });
+      setSearch(false);
+      setItem({ language: [], levels: [] });
+    } else {
+      dispatch(deleteFilter());
+      dispatch(setSelectedLevel(''));
+      setOptions({ language: '', levels: '', price: '' });
+      setSearch(false);
+      setItem({ language: [], levels: [] });
     }
   }, [dispatch, pathname]);
+
+  useEffect(() => {
+    if (filter.length === 0 && search) {
+      setOptions({ language: '', levels: '', price: '' });
+      setSearch(false);
+      setItem({ language: [], levels: [] });
+    }
+  }, [filter, search]);
 
   const clearFilter = () => {
     setOptions({ language: '', levels: '', price: '' });
     setSearch(false);
     dispatch(deleteFilter());
-    dispatch(addFilter(allTeachers));
+    dispatch(setSelectedLevel(''));
   };
 
   return (
@@ -171,8 +198,6 @@ export const Filter = () => {
           Sorry, we could not find a teacher that fits your preferences. Feel free to browse through our available list. 😊
         </p>
       )}
-
-      <TeachersCard item={filter} selectedLevel={options.levels} />
     </>
   );
 };

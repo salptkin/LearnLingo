@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   filterTeachers: [],
   name: '',
+  selectedLevel: '',
 };
 
 export const filterSlice = createSlice({
@@ -18,7 +19,10 @@ export const filterSlice = createSlice({
     addFilterName: (state, { payload }) => {
       state.name = payload;
     },
+    setSelectedLevel: (state, { payload }) => {
+      state.selectedLevel = payload;
+    },
   },
 });
 
-export const { addFilter, deleteFilter, addFilterName } = filterSlice.actions;
+export const { addFilter, deleteFilter, addFilterName, setSelectedLevel } = filterSlice.actions;

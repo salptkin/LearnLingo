@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { set, ref, remove } from "firebase/database";
 import { Avatar } from "@mui/material";
 import { useModal } from "../../helpers/useModal";
@@ -19,6 +19,9 @@ export const TeachersCard = ({ item, selectedLevel = '' }) => {
   const { isOpen, openModal, closeModal } = useModal();
   const authUser = useSelector(state => state.authUser.token);
   const favorite = useFavorite(database);
+
+  useEffect(() => {
+  }, [item, favorite]);
 
   const onClickModal = (id) => {
     const detailsTeacher = item.find(t => String(t.id) === String(id));
@@ -71,7 +74,7 @@ export const TeachersCard = ({ item, selectedLevel = '' }) => {
           const isFavorited = favorite.some(f => String(f.id) === String(id));
 
           return (
-            <li key={keyId} className={styles.itemTeacher}>
+            <li key={id || `teacher-${index}`} className={styles.itemTeacher}>
               <div className={styles.wrapperImg}>
                 <StyledBadge
                   overlap="circular"
@@ -149,7 +152,7 @@ export const TeachersCard = ({ item, selectedLevel = '' }) => {
 
       {isOpen.open && isOpen.name === 'bookLesson' && teacher && (
         <ModalComponent onClose={closeModal}>
-          <BookLesson teacher={teacher} />
+          <BookLesson teacher={teacher} onClose={closeModal} />
         </ModalComponent>
       )}
 
