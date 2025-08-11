@@ -60,4 +60,4 @@
 [salptkin](https://github.com/salptkin)
 
 **Canlı sayfa:**
-(https://travel-trucks-five-psi.vercel.app)
+(https://learn-lingo-beta-seven.vercel.app)
