@@ -172,7 +172,7 @@ export const Filter = () => {
         </p>
       )}
 
-      <TeachersMarkup item={filter} />
+      <TeachersMarkup item={filter} selectedLevel={options.levels} />
     </>
   );
 };

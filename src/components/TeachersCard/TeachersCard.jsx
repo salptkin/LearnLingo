@@ -8,12 +8,12 @@ import { auth, database } from "../../firebaseconfig/config";
 import { useFavorite } from "../../helpers/useFavorite";
 import { ReviewerComponent } from "./Rewievers";
 import { TeacherInfo } from "./TeacherInfo";
-import {NotAuth} from './NotAuth';
+import {NotAuth} from "./NotAuth";
 import { StyledBadge } from "./StyledBadge";
 import { BookLesson } from "../BookLesson/BookLesson";
 import styles from "./TeachersCard.module.css";
 
-export const TeachersMarkup = ({ item }) => {
+export const TeachersMarkup = ({ item, selectedLevel = '' }) => {
   const [visibility, setVisibility] = useState({});
   const [teacher, setTeacher] = useState(null);
   const { isOpen, openModal, closeModal } = useModal();
@@ -119,11 +119,17 @@ export const TeachersMarkup = ({ item }) => {
                 )}
 
                 <ul className={styles.listLevels}>
-                  {levels.map((level, i) => (
-                    <li key={`${level}-${i}`} className={styles.itemLevels}>
-                      <p>{level}</p>
-                    </li>
-                  ))}
+                  {levels.map((level, i) => {
+                    const isActive = selectedLevel && selectedLevel === level;
+                    return (
+                      <li
+                        key={`${level}-${i}`}
+                        className={`${styles.itemLevels} ${isActive ? styles.activeLevel : ""}`}
+                      >
+                        <p>{level}</p>
+                      </li>
+                    );
+                  })}
                 </ul>
 
                 {visibility[keyId] && (
