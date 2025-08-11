@@ -1,0 +1,72 @@
+.section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    /* arada boşluk */
+    padding: 20px;
+    flex-wrap: wrap;
+    /* aşırı taşmayı engeller */
+}
+
+/* Mobil için dikey görünüm */
+@media screen and (max-width: 768px) {
+    .section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .img {
+        max-width: 80%;
+        margin-bottom: 20px;
+    }
+}
+
+.img {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+.notFoundPage__description {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.notFoundPage__title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.notFoundPage__textContainer {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    /* mobilde alt alta kayabilir */
+}
+
+.notFoundPage__button {
+    padding: 20px 30px;
+    background-color: #f4c550;
+    color: #121417;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.notFoundPage__button:hover {
+    background-color: #FFDC86;
+}

@@ -8,6 +8,7 @@ import { auth, database } from "../../firebaseconfig/config";
 import { useFavorite } from "../../helpers/useFavorite";
 import { ReviewerComponent } from "./Rewievers";
 import { TeacherInfo } from "./TeacherInfo";
+import {NotAuth} from './NotAuth';
 import { StyledBadge } from "./StyledBadge";
 import { BookLesson } from "../BookLesson/BookLesson";
 import styles from "./TeachersCard.module.css";

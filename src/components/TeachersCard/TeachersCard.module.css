@@ -264,9 +264,9 @@
 
 .titleNotAuth {
     margin-top: 40px;
-    color: var(--main-text-color);
     font-size: 16px;
     font-weight: 500;
     line-height: 1;
     max-width: 300px;
+    text-align: center;
 }
