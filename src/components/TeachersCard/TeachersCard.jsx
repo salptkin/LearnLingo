@@ -13,7 +13,7 @@ import { StyledBadge } from "./StyledBadge";
 import { BookLesson } from "../BookLesson/BookLesson";
 import styles from "./TeachersCard.module.css";
 
-export const TeachersMarkup = ({ item, selectedLevel = '' }) => {
+export const TeachersCard = ({ item, selectedLevel = '' }) => {
   const [visibility, setVisibility] = useState({});
   const [teacher, setTeacher] = useState(null);
   const { isOpen, openModal, closeModal } = useModal();
@@ -162,4 +162,4 @@ export const TeachersMarkup = ({ item, selectedLevel = '' }) => {
   );
 };
 
-export default TeachersMarkup;
+export default TeachersCard;

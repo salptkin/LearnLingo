@@ -4,7 +4,7 @@ import { ref, child, get } from "firebase/database";
 import { database } from "../../firebaseconfig/config";
 import styles from "./TeachersPage.module.css";
 import { useEffect, useState } from "react";
-import { TeachersMarkup } from "../../components/TeachersCard/TeachersCard";
+import { TeachersCard } from "../../components/TeachersCard/TeachersCard";
 
 const TEACHERS_COLLECTION = 'teachers';
 const TEACHERS_PER_PAGE = 4;
@@ -44,7 +44,7 @@ const TeachersPage = () => {
         <Filter />
         {filter.length === 0 && (
           <>
-            <TeachersMarkup item={limitedTeachers} allTeacher={teachers} />
+            <TeachersCard item={limitedTeachers} allTeacher={teachers} />
             {count <= teachers.length && (
               <button
                 type="button"

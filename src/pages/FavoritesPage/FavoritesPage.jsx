@@ -1,4 +1,4 @@
-import { TeachersMarkup } from "../../components/TeachersCard/TeachersCard";
+import { TeachersCard } from "../../components/TeachersCard/TeachersCard";
 import { database } from "../../firebaseconfig/config";
 import { Container } from "../../globalStyles";
 import { useFavorite } from "../../helpers/useFavorite";
@@ -10,7 +10,7 @@ const FavoritesPage = () => {
   return (
     <div className={styles.section}>
       <Container>
-        <TeachersMarkup item={favorite} />
+        <TeachersCard item={favorite} />
         {favorite.length === 0 && (
           <p className={styles.title}>
             You haven't added teachers to your favorites yet.

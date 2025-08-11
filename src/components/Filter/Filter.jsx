@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ref, onValue } from "firebase/database";
 import { FormControl, MenuItem, Select, styled } from "@mui/material";
-import { TeachersMarkup } from "../../components/TeachersCard/TeachersCard";
+import { TeachersCard } from "../../components/TeachersCard/TeachersCard";
 import { database } from "../../firebaseconfig/config";
 import { languages, levels, price } from "../../helpers/optionFilter";
 import { TiDelete } from "react-icons/ti";
@@ -172,7 +172,7 @@ export const Filter = () => {
         </p>
       )}
 
-      <TeachersMarkup item={filter} selectedLevel={options.levels} />
+      <TeachersCard item={filter} selectedLevel={options.levels} />
     </>
   );
 };
